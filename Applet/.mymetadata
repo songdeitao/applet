@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-module
   type="WEB"
-  name="Applet"
+  name="applet"
   id="myeclipse.1484224055686"
   context-root="/applet"
   j2ee-spec="1.7"
-  archive="Applet.war">
+  archive="applet.war">
   <attributes>
     <attribute name="webrootdir" value="src/main/webapp" />
   </attributes>
