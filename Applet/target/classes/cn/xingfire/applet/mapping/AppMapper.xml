@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xingfire.applet.dao.IAppDao">
+	<resultMap id="appMap" type="cn.xingfire.applet.pojo.App">
+		<id column="appId" property="appId" jdbcType="INTEGER" />
+		<result column="appName" property="appName" jdbcType="VARCHAR" />
+		<result column="icon" property="icon" jdbcType="VARCHAR" />
+		<result column="levelId" property="levelId" jdbcType="INTEGER" />
+		<result column="uuid" property="uuid" jdbcType="VARCHAR" />
+		<result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="labels" property="labels" jdbcType="VARCHAR" />
+		<result column="copyNum" property="copyNum" jdbcType="INTEGER" />
+		<result column="score" property="score" jdbcType="FLOAT" />
+		<result column="qrCode" property="qrCode" jdbcType="VARCHAR" />
+		<result column="description" property="desc" jdbcType="VARCHAR" />
+		<result column="screenshots" property="screenshots" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<sql id="appColumnList">
+		appId, appName, icon, levelId, uuid, createTime, labels, copyNum, score, description, screenshots, qrCode
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="appMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="appColumnList" />
+		from applet_app
+		where uuid = #{uuid} and status = 1 
+	</select>
+
+	<select id="getAppsByLevel" resultMap="appMap">
+		select
+		<include refid="appColumnList" />
+		from applet_app 
+		where status = 1 
+		<if test="level != 0">
+			and levelId = #{level, jdbcType=INTEGER} 
+		</if>
+		limit #{from, jdbcType=INTEGER},#{size, jdbcType=INTEGER}
+	</select>
+	
+	<select id="getAppsTotal" resultType="java.lang.Integer">
+		select
+		count(1) 
+		from applet_app 
+		where status = 1 
+		<if test="level != 0">
+			and levelId = #{level, jdbcType=INTEGER} 
+		</if>
+	</select>
+	
+	<select id="getAppsByKeyword" resultMap="appMap" parameterType="java.lang.String">
+		select
+		<include refid="appColumnList" />
+		from applet_app 
+		where status = 1 
+		<if test="keyword != null">
+			and appName like CONCAT('%','${keyword}','%' )
+		</if>
+		ORDER BY hotValue DESC 
+		limit 10
+	</select>
+	
+	<select id="getLatestOnline" resultMap="appMap">
+		SELECT
+		<include refid="appColumnList" />
+		FROM applet_app WHERE STATUS = 1 
+		ORDER BY createTime DESC 
+		LIMIT 20
+	</select>
+	
+	<select id="getRecommendApps" resultMap="appMap">
+		SELECT
+		<include refid="appColumnList" />
+		FROM applet_app WHERE STATUS = 1 
+		ORDER BY hotValue DESC 
+		LIMIT 9
+	</select>
+	
+	<!-- 根据类别获取小程序信息 -->
+	<select id="getAppsByCategory" resultMap="appMap">
+		SELECT 
+		<include refid="appColumnList" /> 
+		FROM applet_app 
+		WHERE appId IN 
+		( SELECT DISTINCT appId 
+		  FROM applet_appcategory 
+		  WHERE isValid = 1 AND categoryId =  ${categoryId} )
+	</select>
+	
+</mapper>
