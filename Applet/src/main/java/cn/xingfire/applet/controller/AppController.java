@@ -117,9 +117,10 @@ public class AppController {
 	@ResponseBody
 	@RequestMapping(value = "/getAppsByCategory", produces = "application/json;charset=UTF-8")
 	public Apps getAppsByCategory(HttpServletRequest request) {
-		return this.appService.getAppsByCategory(
-				CommonUtil.toInt(
-						this.appService.getInfo(request.getParameter("categoryId"))));
+		int page = CommonUtil.toInt(request.getParameter("page"), 1);
+		int size = CommonUtil.toInt(request.getParameter("size"), 15);
+		return this.appService.getAppsByCategory(CommonUtil.toInt(request
+				.getParameter("categoryId")), page, size);
 	}
 
 }

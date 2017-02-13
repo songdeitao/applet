@@ -21,5 +21,7 @@ public interface IAppService {
 	
 	String getAppsTotal(int level);
 	
-	Apps getAppsByCategory(int categoryId);
+	Apps getAppsByCategory(int categoryId, int page, int size);
+	
+	String getAppsTotalByCategory(int categoryId);
 }

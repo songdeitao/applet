@@ -56,6 +56,7 @@
 		where status = 1 
 		<if test="keyword != null">
 			and appName like CONCAT('%','${keyword}','%' )
+			or labels like CONCAT('%','${keyword}','%' )
 		</if>
 		ORDER BY hotValue DESC 
 		limit 10
@@ -85,7 +86,22 @@
 		WHERE appId IN 
 		( SELECT DISTINCT appId 
 		  FROM applet_appcategory 
-		  WHERE isValid = 1 AND categoryId =  ${categoryId} )
+		  WHERE isValid = 1 AND categoryId = ${categoryId} )
+		limit #{from, jdbcType=INTEGER},#{size, jdbcType=INTEGER}
+	</select>
+	
+	<!-- 根据类别获取小程序信息 总数 -->
+	<select id="getAppsTotalByCategory" resultType="java.lang.Integer">
+	   select
+		count(1) from (
+			SELECT 
+			appId
+			FROM applet_app 
+			WHERE appId IN 
+			( SELECT DISTINCT appId 
+			  FROM applet_appcategory 
+			  WHERE isValid = 1 AND categoryId = ${categoryId} )
+	   ) as b
 	</select>
 	
 </mapper>

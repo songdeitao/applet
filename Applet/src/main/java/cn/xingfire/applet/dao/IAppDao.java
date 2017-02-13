@@ -9,7 +9,7 @@ import cn.xingfire.applet.pojo.App;
 public interface IAppDao {
 	App selectByPrimaryKey(String uuid);
 
-	List<App> getAppsByLevel(@Param("level") int level,@Param("from") int from,@Param("size") int size);
+	List<App> getAppsByLevel(@Param("level") int level,@Param("from") int from, @Param("size") int size);
 
 	// 获取最新上线的app
 	List<App> getLatestOnline();
@@ -20,5 +20,11 @@ public interface IAppDao {
 	
 	int getAppsTotal(@Param("level") int level);
 	
-	List<App> getAppsByCategory(@Param("categoryId") int categoryId);
+	List<App> getAppsByCategory(@Param("categoryId") int categoryId, @Param("from") int from, @Param("size") int size);
+	
+	int getAppsTotalByCategory(@Param("categoryId") int categoryId);
+	
+	List<App> getAppsByFirstCategory(@Param("categoryId") int categoryId, @Param("from") int from, @Param("size") int size);
+	
+	int getAppsTotalByFirstCategory(@Param("categoryId") int categoryId);
 }

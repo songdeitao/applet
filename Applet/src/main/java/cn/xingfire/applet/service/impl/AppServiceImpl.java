@@ -68,7 +68,7 @@ public class AppServiceImpl implements IAppService {
 		}
 		// 获取推荐数据
 		Apps recommendApps = this.getRecommendApps();
-		Apps apps = this.getAppsByLevel(level, (page - 1) * size, size);
+		Apps apps = this.getAppsByLevel(level, page, size);
 		HomePage hp = new HomePage();
 		hp.recommendApps = recommendApps;
 		hp.pageApps = apps;
@@ -105,14 +105,14 @@ public class AppServiceImpl implements IAppService {
 	}
 
 	@Override
-	public Apps getAppsByCategory(int categoryId) {
+	public Apps getAppsByCategory(int categoryId, int page, int size) {
 		Apps appsRes = new Apps();
 		try {
 			// 获取推荐数据
-			List<App> categoryApps = this.appDao.getAppsByCategory(categoryId);
+			List<App> categoryApps = this.appDao.getAppsByCategory(categoryId, (page - 1) * size, size);
 			BusinessUtil.operatorImages(categoryApps);
 			if (categoryApps != null && categoryApps.size() > 0) {
-				appsRes.total = categoryApps.size() + "";
+				appsRes.total = this.getAppsTotalByCategory(categoryId);
 				appsRes.apps = categoryApps;
 			} else {
 				appsRes.errorInfo = ErrorInfoUtil.NORESULT;
@@ -121,6 +121,11 @@ public class AppServiceImpl implements IAppService {
 			appsRes.errorInfo = ErrorInfoUtil.EXCEPTION;
 		}
 		return appsRes;
+	}
+
+	@Override
+	public String getAppsTotalByCategory(int categoryId) {
+		return this.appDao.getAppsTotalByCategory(categoryId) + "";
 	}
 
 }
