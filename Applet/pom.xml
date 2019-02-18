@@ -7,6 +7,7 @@
 	<version>1.0.1</version>
 	<name>applet Maven Webapp</name>
 	<url>http://maven.apache.org</url>
+	
 
 	<properties>
 		<!-- spring版本号 -->
